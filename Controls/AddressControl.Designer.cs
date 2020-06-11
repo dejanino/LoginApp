@@ -1,6 +1,6 @@
-﻿namespace LoginApplication
+﻿namespace LoginApplication.Controls
 {
-    partial class Address
+    partial class AddressControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -105,7 +105,7 @@
             this.txtPostCode.Name = "txtPostCode";
             this.txtPostCode.Size = new System.Drawing.Size(228, 22);
             this.txtPostCode.TabIndex = 1;
-            this.txtPostCode.TextChanged += new System.EventHandler(this.txtPostCode_OnTextChanged);
+            this.txtPostCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPostCode_OnKeyDown);
             // 
             // Address
             // 

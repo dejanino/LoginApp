@@ -1,4 +1,6 @@
-﻿namespace LoginApplication
+﻿using LoginApplication.Controls;
+
+namespace LoginApplication
 {
     partial class frmMain
     {
@@ -29,9 +31,9 @@
         private void InitializeComponent()
         {
             this.btn_LogOut = new System.Windows.Forms.Button();
-            this.lstStudents = new System.Windows.Forms.ListView();
-            this.ctlAddress = new LoginApplication.Address();
+            this.lstUsers = new System.Windows.Forms.ListView();
             this.btnSubmit = new System.Windows.Forms.Button();
+            this.addressControl1 = new LoginApplication.Controls.AddressControl();
             this.SuspendLayout();
             // 
             // btn_LogOut
@@ -45,24 +47,13 @@
             this.btn_LogOut.UseVisualStyleBackColor = true;
             this.btn_LogOut.Click += new System.EventHandler(this.btn_LogOut_Click);
             // 
-            // lstStudents
+            // lstUsers
             // 
-            this.lstStudents.Location = new System.Drawing.Point(38, 89);
-            this.lstStudents.Name = "lstStudents";
-            this.lstStudents.Size = new System.Drawing.Size(275, 183);
-            this.lstStudents.TabIndex = 1;
-            this.lstStudents.UseCompatibleStateImageBehavior = false;
-            // 
-            // ctlAddress
-            // 
-            this.ctlAddress.City = null;
-            this.ctlAddress.CountryId = 0;
-            this.ctlAddress.Location = new System.Drawing.Point(351, 89);
-            this.ctlAddress.Name = "ctlAddress";
-            this.ctlAddress.PostCode = 0;
-            this.ctlAddress.Size = new System.Drawing.Size(450, 183);
-            this.ctlAddress.StreetAddress = null;
-            this.ctlAddress.TabIndex = 2;
+            this.lstUsers.Location = new System.Drawing.Point(38, 89);
+            this.lstUsers.Name = "lstUsers";
+            this.lstUsers.Size = new System.Drawing.Size(275, 183);
+            this.lstUsers.TabIndex = 1;
+            this.lstUsers.UseCompatibleStateImageBehavior = false;
             // 
             // btnSubmit
             // 
@@ -74,14 +65,25 @@
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
+            // addressControl1
+            // 
+            this.addressControl1.City = null;
+            this.addressControl1.CountryId = 1;
+            this.addressControl1.Location = new System.Drawing.Point(351, 89);
+            this.addressControl1.Name = "addressControl1";
+            this.addressControl1.PostCode = 0;
+            this.addressControl1.Size = new System.Drawing.Size(450, 183);
+            this.addressControl1.StreetAddress = null;
+            this.addressControl1.TabIndex = 4;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(833, 415);
+            this.Controls.Add(this.addressControl1);
             this.Controls.Add(this.btnSubmit);
-            this.Controls.Add(this.ctlAddress);
-            this.Controls.Add(this.lstStudents);
+            this.Controls.Add(this.lstUsers);
             this.Controls.Add(this.btn_LogOut);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmMain";
@@ -95,8 +97,9 @@
         #endregion
 
         private System.Windows.Forms.Button btn_LogOut;
-        private System.Windows.Forms.ListView lstStudents;
-        private Address ctlAddress;
+        private System.Windows.Forms.ListView lstUsers;
+        private AddressControl _address;
         private System.Windows.Forms.Button btnSubmit;
+        private AddressControl addressControl1;
     }
 }
