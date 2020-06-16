@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using LoginApplication.Classes;
 
 namespace LoginApplication.Controls
 {
@@ -19,12 +20,31 @@ namespace LoginApplication.Controls
         public int PostCode { get; set; }
         private bool nonNumber = false;
 
+        public event EventHandler OnChildTextChanged;
+
         public AddressControl()
         {
             InitializeComponent();
             this.Load += Address_OnLoad;
             txtPostCode.KeyPress += txtPostCode_OnKeyPress;
             txtPostCode.MouseLeave += txtPostCode_OnMouseLeave;
+            txtPostCode.TextChanged += txtPostCode_OnTextChanged;
+        }
+
+        public void Populate(int addressId)
+        {
+            Address a = new Address();
+            var address = a.GetAddress(addressId);
+            if (address != null)
+            {
+                txtStreetAddress.Text = address.StreetAddress;
+                txtCity.Text = address.City;
+            }
+            else
+            {
+                MessageBox.Show("This address does not exist");
+            }
+
         }
 
         private void Address_OnLoad(object sender, EventArgs e)
@@ -39,11 +59,15 @@ namespace LoginApplication.Controls
         private void txtStreetAddress_OnTextChanged(object sender, EventArgs e)
         {
             this.StreetAddress = txtStreetAddress.Text;
+            if (OnChildTextChanged != null)
+                OnChildTextChanged(txtStreetAddress.Text, null);
         }
 
         private void txtCity_OnTextChanged(object sender, EventArgs e)
         {
             this.City = txtCity.Text;
+            if (OnChildTextChanged != null)
+                OnChildTextChanged(txtCity.Text, null);
         }
 
         private void txtPostCode_OnKeyDown(object sender, KeyEventArgs e)
@@ -75,6 +99,11 @@ namespace LoginApplication.Controls
             {
                 this.PostCode = int.Parse(txtPostCode.Text);
             }
+        }
+        private void txtPostCode_OnTextChanged(object sender, EventArgs e)
+        {
+            if (OnChildTextChanged != null)
+                OnChildTextChanged(txtPostCode.Text, null);
         }
 
         private void ddlCountry_OnSelectedIndexChanged(object sender, EventArgs e)

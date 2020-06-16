@@ -62,6 +62,13 @@ namespace LoginApplication.Classes
             }
         }
 
+        internal Address GetAddress(int addressId)
+        {
+            if (AllAddresses == null) _getAllAddresses();
+            var address = AllAddresses.Where(x => x.ID == addressId).FirstOrDefault();
+            return address;
+        }
+
         public IList<Address> FilterAddress(string _address)
         {
             if (AllAddresses == null) _getAllAddresses();
