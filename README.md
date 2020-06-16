@@ -5,3 +5,9 @@
 
 * 10.06.2020
 1. Saving objects to json file (serialization/deserialization)
+
+* 15.06.2020.
+1. Saving new object
+2. Edit User 
+3. Delete User
+4. Edit address popup form
