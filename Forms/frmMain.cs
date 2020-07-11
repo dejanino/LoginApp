@@ -4,6 +4,9 @@ using LoginApplication.Forms;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -13,7 +16,12 @@ namespace LoginApplication
     {
         private bool isEdit = false;
         private User editedUser = null;
-        // private AddressControl _address;
+
+        public static string connectionString = ConfigurationManager.ConnectionStrings["localDb"].ConnectionString;
+        public static SqlConnection conn = new SqlConnection(connectionString);
+        private static SqlDataAdapter _dataAdapter = DataAdapters.EmployeeAdapter(conn);
+        private DataSet employees;
+
         public frmMain()
         {
             InitializeComponent();
@@ -26,16 +34,57 @@ namespace LoginApplication
             var userList = user.GetUserList(); // OR 
             populateList(userList);
 
+            populateGridView();
+        }
+
+        private void populateGridView()
+        {
+            gvUsers.AutoGenerateColumns = true;
+            gvUsers.EditMode = DataGridViewEditMode.EditOnEnter;
+
+            employees = new DataSet();
+            try
+            {
+                _dataAdapter.Fill(employees, "Employees");
+                gvUsers.DataSource = employees.Tables["Employees"];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Doslo je do greske!");
+            }
+            finally
+            {
+                if (conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        private void UpdateGridView()
+        {
+            try
+            {
+                _dataAdapter.Update(employees, "Employees");
+                populateGridView();
+                MessageBox.Show("Usplesno snimanje");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Neuspesno snimanje: {0}", ex.Message);
+            }
+        }
+
+        private void populateList(IList<User> userList)
+        {
+            // set events
             // sort columns on column click
             this.lstUsers.ColumnClick += new ColumnClickEventHandler(OnColumnClick);
             ColumnClickEventArgs eArgs = new ColumnClickEventArgs(0);
             OnColumnClick(lstUsers, eArgs);
 
             this.lstUsers.MouseClick += LstUsers_OnMouseClick;
-        }
 
-        private void populateList(IList<User> userList)
-        {
             //set view
             lstUsers.View = View.Details; // Tile
 
@@ -57,7 +106,7 @@ namespace LoginApplication
 
                 lstUsers.Items.Add(item);
             }
-            lstUsers.Sorting = SortOrder.Descending;
+            lstUsers.Sorting = System.Windows.Forms.SortOrder.Descending;
             lstUsers.GridLines = true;
             lstUsers.FullRowSelect = true;
         }
@@ -110,7 +159,7 @@ namespace LoginApplication
             _address.CountryId = 1;
         }
 
-        #region
+        #region Events
 
         private void LstUsers_OnMouseClick(object sender, MouseEventArgs e)
         {
@@ -203,7 +252,7 @@ namespace LoginApplication
         {
             Address a = new Address();
             User u = new User();
-            _address = this.addressControl1;
+            _address = this.ctlAddress;
             _address.OnChildTextChanged += new EventHandler(child_OnChildTextChanged);
 
             if (isEdit && editedUser != null)
@@ -243,25 +292,28 @@ namespace LoginApplication
             // update list
             lstUsers.Items.Clear();
             this.populateList(u.GetUserList());
-
-
-            //int[] users = new int[lstUsers.SelectedItems.Count];
-            //int i = 0;
-            //foreach (ListViewItem item in lstUsers.SelectedItems)
-            //{
-            //    //fill the text boxes
-            //    var id = item.Text;
-            //    var name = item.SubItems[1].Text;
-            //    var age = item.SubItems[2].Text;
-            //    users[i] = int.Parse(id);
-            //    i++;
-            //}
+            
         }
         
         void child_OnChildTextChanged(object sender, EventArgs e)
         {
             
         }
+
+        private void btnSync_Click(object sender, EventArgs e)
+        {   
+            UpdateGridView();
+        }
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in gvUsers.SelectedRows)
+            {
+                gvUsers.Rows.RemoveAt(row.Index);
+            }
+            UpdateGridView();
+        }
         #endregion
+
+
     }
 }
